@@ -17,8 +17,6 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 line_bot_api = LineBotApi(config.get('line-bot','channel_access_token'))
 handler = WebhookHandler(config.get('line-bot','channel_secret'))
-#line_bot_api = LineBotApi('6IVswqsu9eK7XIjm3ez6qK736duTDWp1rSC06sJ1706/3m+9JeNK6IkKWkRqsSc00h2bKyInNA/g3tN+NdAbuGddDIXof+zynVgzcbwVZ2ThX5UHkXgDHYkMFQElkB/N68SQV9drTCGTSkIiiExiNQdB04t89/1O/w1cDnyilFU=')
-#handler = WebhookHandler('5ffbfccf710ea7340ada71b68059f959')
 
 # 接收 LINE 的資訊
 @app.route("/callback", methods=['POST'])
