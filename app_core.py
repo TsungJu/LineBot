@@ -6,9 +6,12 @@ from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
 
 import configparser
+import urllib
+import re
+import random
 
 app = Flask(__name__)
 
@@ -44,9 +47,34 @@ def echo(event):
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Marley Liberate Air put on the shelf'))
             else:
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text='No Not Yet'))
-        elif "Google images:" in event.message.text:
-            images_url = event.message.text.split(':')
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=images_url[1]))
+        elif "Google image : " in event.message.text:
+            images = event.message.text.split(':')
+            q_string = {'tbm':'isch','q':images[1]}
+            url = f"https://www.google.com/search?{urllib.parse.urlencode(q_string)}/"
+            headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'}
+            req = urllib.request.Request(url,headers = headers)
+            conn = urllib.request.urlopen(req)
+            print('[API Log] fetch conn finish')
+
+            pattern = 'img data-src="\S*"'
+            img_list = []
+
+            for match in re.finditer(pattern,str(conn.read())):
+                img_list.append(match.group()[14:-1])
+            
+            random_img_url = img_list[random.randint(0,len(img_list)+1)]
+            print('[API Log] fetch img url finish')
+
+            line_bot_api.reply_message(
+                event.reply_token,
+                ImageSendMessage(
+                    original_content_url=random_img_url,
+                    preview_image_url=random_img_url
+                )
+            )
+
+            #For split test
+            #line_bot_api.reply_message(event.reply_token,TextSendMessage(text=images_url[1]))
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
 
