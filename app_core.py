@@ -44,6 +44,9 @@ def echo(event):
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text='Marley Liberate Air put on the shelf'))
             else:
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text='No Not Yet'))
+        elif "Google images:" in event.message.text:
+            images_url = event.message.text.split(':')
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=images_url[1]))
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
 
