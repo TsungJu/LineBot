@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 載入需要的模組
 from __future__ import unicode_literals
 import os
@@ -13,6 +14,8 @@ import urllib
 import re
 import random
 
+from flask import render_template
+
 app = Flask(__name__)
 
 # LINE 聊天機器人的基本資料
@@ -20,6 +23,11 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 line_bot_api = LineBotApi(config.get('line-bot','channel_access_token'))
 handler = WebhookHandler(config.get('line-bot','channel_secret'))
+
+# For wake heroku app up
+@app.route("/")
+def wake():
+    return render_template("wake.html")
 
 # 接收 LINE 的資訊
 @app.route("/callback", methods=['POST'])
