@@ -6,6 +6,7 @@
 
  - 查詢 igogosport 網站 Marley Liberate Air 福利品是否上架。
  - 依據輸入隨機搜尋一張 google 圖片。
+ - 周一至周五下班通知。
 
 ## How to use ?
 
@@ -21,3 +22,6 @@
 
 ![google image](pictures/google_image.JPG)
 
+4. 台灣時間周一至周五下午6點自動通知你下班，如下圖：
+
+![get off work notify](pictures/get_off_work_notify.JPG)
