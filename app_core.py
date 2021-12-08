@@ -86,6 +86,8 @@ def echo(event):
                 #line_bot_api.reply_message(event.reply_token,TextSendMessage(text=images[1]))
             except:
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
+        elif event.message.text == "check user_id":
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(event.source.user_id)))
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
 
