@@ -116,7 +116,7 @@ def echo(event):
         elif event.message.text == "Is username exist check:":
             username = prepare_username_check(event.message.text)
             reply = username_check(username)
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=reply))
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(reply)))
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
 
