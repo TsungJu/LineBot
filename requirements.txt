@@ -3,3 +3,4 @@ gunicorn
 line-bot-sdk
 requests
 APScheduler==3.6.1
+psycopg2

@@ -13,12 +13,13 @@ import configparser
 import urllib
 import re
 import random
+import psycopg2
 
 from flask import render_template
 
 app = Flask(__name__)
 
-# LINE 聊天機器人的基本資料
+# LINE bot information
 config = configparser.ConfigParser()
 config.read('config.ini')
 line_bot_api = LineBotApi(config.get('line-bot','channel_access_token'))
@@ -29,7 +30,31 @@ handler = WebhookHandler(config.get('line-bot','channel_secret'))
 def wake():
     return render_template("wake.html")
 
-# 接收 LINE 的資訊
+def prepare_username_check(text):
+    text_list = text.split(':')
+    username = text_list[1]
+    return username
+
+def username_check(username):
+    DATABASE_URL = os.environ['DATABASE_URL']
+
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+
+    postgres_check_query = f"""
+        SELECT count(username)
+        FROM account
+        WHERE username = '{username}';
+    """
+
+    cursor.execute(postgres_check_query)
+    username_count = cursor.fetchone()
+    if username_count[0] == 0:
+        return False
+    else:
+        return True
+
+# Receive LINE information
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -88,6 +113,10 @@ def echo(event):
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
         elif event.message.text == "check user_id":
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(event.source.user_id)))
+        elif event.message.text == "Is username exist check:":
+            username = prepare_username_check(event.message.text)
+            reply = username_check(username)
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=reply))
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
 
