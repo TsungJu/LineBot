@@ -113,11 +113,9 @@ def echo(event):
                 line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
         elif event.message.text == "check user_id":
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(event.source.user_id)))
-        elif event.message.text == "Is username exist check:":
+        elif "Is username exist check:" in event.message.text:
             username = prepare_username_check(event.message.text)
-            print(username)
             reply = username_check(username)
-            print(str(reply))
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=str(reply)))
         else:
             line_bot_api.reply_message(event.reply_token,TextSendMessage(text=event.message.text))
