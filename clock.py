@@ -7,7 +7,7 @@ from app_core import line_bot_api
 
 sched = BlockingScheduler()
 
-@sched.scheduled_job('cron',day_of_week='tue-fri',minute='*/20')
+@sched.scheduled_job('cron',day_of_week='mon-fri',minute='*/20')
 def scheduled_job():
     url = "https://leonardlinebot.herokuapp.com/"
     conn = urllib.request.urlopen(url)
